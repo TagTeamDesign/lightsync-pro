@@ -60,7 +60,7 @@ graph TB
 
 ## The Broker Architecture
 
-The core innovation (Patent Application 19/440,404) is that **OAuth client secrets are held centrally in the broker**, not distributed with WordPress plugins.
+The core innovation (Patent-Pending Application 19/440,404) is that **OAuth client secrets are held centrally in the broker**, not distributed with WordPress plugins.
 
 This solves a fundamental problem: WordPress plugins can't safely hold OAuth secrets for cloud APIs like Adobe Lightroom. Anyone who installs the plugin would have access to the credentials — a critical security and compliance issue that prevents legitimate Adobe API approval at scale.
 
