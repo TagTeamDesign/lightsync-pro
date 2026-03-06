@@ -1,0 +1,410 @@
+{
+  "schema_version": "1.0",
+  "mcp_protocol_version": "2025-03-26",
+  "server_name": "lightsync-pro",
+  "tools": [
+    {
+      "name": "syncific_status",
+      "description": "Check connection status: which sources are connected, destinations available, and queue depth.",
+      "inputSchema": { "type": "object", "properties": {} },
+      "annotations": { "title": "Connection Status", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "syncific_connect",
+      "description": "Start the Syncific connection flow. Opens a browser for OAuth authentication. Run this first if not connected.",
+      "inputSchema": { "type": "object", "properties": {} },
+      "annotations": { "title": "Connect to Syncific", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "lightroom_list_albums",
+      "description": "List Lightroom albums. Returns album names, IDs, and photo counts. Automatically resolves catalog ID.",
+      "inputSchema": { "type": "object", "properties": {} },
+      "annotations": { "title": "List Lightroom Albums", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "lightroom_get_photos",
+      "description": "Get photos from a Lightroom album with thumbnails. Returns photo metadata (filename, capture date, camera, dimensions, EXIF) and visual previews.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "catalog_id": { "type": "string", "description": "Lightroom catalog ID" },
+          "album_id": { "type": "string", "description": "Lightroom album ID" },
+          "limit": { "type": "number", "description": "Max photos to return (default: 10, max: 50)" }
+        },
+        "required": ["catalog_id", "album_id"]
+      },
+      "annotations": { "title": "Get Lightroom Photos", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "figma_list_files",
+      "description": "List recent Figma files. Returns file names, IDs, and last modified dates.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "team_id": { "type": "string", "description": "Figma team ID (optional)" },
+          "project_id": { "type": "string", "description": "Figma project ID (optional)" }
+        }
+      },
+      "annotations": { "title": "List Figma Files", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "figma_get_frames",
+      "description": "Get frames/pages from a Figma file. Returns frame names, IDs, dimensions, and types.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "file_key": { "type": "string", "description": "Figma file key" }
+        },
+        "required": ["file_key"]
+      },
+      "annotations": { "title": "Get Figma Frames", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "dropbox_list_files",
+      "description": "List files and folders in a Dropbox path. Returns file names, sizes, modification dates, and download links for images.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string", "description": "Dropbox folder path (default: root '')" },
+          "cursor": { "type": "string", "description": "Pagination cursor from previous response" }
+        }
+      },
+      "annotations": { "title": "List Dropbox Files", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "shutterstock_list_collections",
+      "description": "List your Shutterstock collections (lightboxes).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "number", "description": "Page number (default: 1)" },
+          "per_page": { "type": "number", "description": "Results per page (default: 20)" }
+        }
+      },
+      "annotations": { "title": "List Shutterstock Collections", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "shutterstock_get_collection_items",
+      "description": "Get images from a Shutterstock collection with previews.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collection_id": { "type": "string", "description": "Shutterstock collection ID" },
+          "page": { "type": "number" },
+          "per_page": { "type": "number" }
+        },
+        "required": ["collection_id"]
+      },
+      "annotations": { "title": "Get Shutterstock Collection Items", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "shutterstock_list_licenses",
+      "description": "List your licensed/purchased Shutterstock images.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page": { "type": "number" },
+          "per_page": { "type": "number" }
+        }
+      },
+      "annotations": { "title": "List Shutterstock Licenses", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "canva_list_designs",
+      "description": "List your Canva designs with thumbnails.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "continuation": { "type": "string", "description": "Pagination token" }
+        }
+      },
+      "annotations": { "title": "List Canva Designs", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "canva_export_design",
+      "description": "Export a Canva design as PNG, PDF, JPG, or other format.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "design_id": { "type": "string" },
+          "format": { "type": "string", "enum": ["png", "jpg", "pdf", "svg", "gif", "pptx", "mp4"] }
+        },
+        "required": ["design_id"]
+      },
+      "annotations": { "title": "Export Canva Design", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "canva_get_export",
+      "description": "Check the status of a Canva export job and get the download URL when complete.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "export_id": { "type": "string" }
+        },
+        "required": ["export_id"]
+      },
+      "annotations": { "title": "Check Canva Export Status", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "sync_source",
+      "description": "Trigger a full sync for any connected source.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string", "enum": ["lightroom", "figma", "dropbox", "shutterstock", "canva", "bynder", "brandfolder"] },
+          "source_path": { "type": "string" },
+          "catalog_id": { "type": "string" },
+          "sync_target": { "type": "string", "enum": ["wp", "shopify", "both"] },
+          "confirmed": { "type": "boolean" }
+        },
+        "required": ["source"]
+      },
+      "annotations": { "title": "Sync Source", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "sync_info",
+      "description": "Compare source against asset map to find unsynced items (diff) or view sync history (log).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["diff", "log"] },
+          "source": { "type": "string" },
+          "catalog_id": { "type": "string" },
+          "source_path": { "type": "string" },
+          "limit": { "type": "number" }
+        },
+        "required": ["action"]
+      },
+      "annotations": { "title": "Sync Info", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "bulk_import",
+      "description": "Import assets from any source into WordPress/Shopify. Max 50 per call.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "source_ids": { "type": "array", "items": { "type": "string" } },
+          "source_id": { "type": "string" },
+          "catalog_id": { "type": "string" },
+          "sync_target": { "type": "string", "enum": ["wp", "shopify", "both"] },
+          "title": { "type": "string" },
+          "alt_text": { "type": "string" },
+          "confirmed": { "type": "boolean" }
+        },
+        "required": ["source"]
+      },
+      "annotations": { "title": "Bulk Import", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "media_library",
+      "description": "Browse the WordPress media library. Filter by source, search, sort by AI quality score.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "search": { "type": "string" },
+          "sort_by": { "type": "string", "enum": ["date", "quality", "hero", "impressions"] },
+          "limit": { "type": "number" },
+          "offset": { "type": "number" }
+        }
+      },
+      "annotations": { "title": "Media Library", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "media_manage",
+      "description": "Modify WordPress media. Actions: set_alt, set_metadata, set_featured, delete, bulk_ai_alt, re_optimize, shopify_sync, ai_analyze, find_usage, swap_sitewide, gen_rollback, approve_variant, reject_variant.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["set_alt", "set_metadata", "set_featured", "delete", "bulk_ai_alt", "re_optimize", "shopify_sync", "ai_analyze", "find_usage", "swap_sitewide", "gen_rollback", "approve_variant", "reject_variant"] },
+          "attachment_id": { "type": "number" },
+          "attachment_ids": { "type": "array", "items": { "type": "number" } },
+          "alt_text": { "type": "string" },
+          "title": { "type": "string" },
+          "caption": { "type": "string" },
+          "post_id": { "type": "number" },
+          "replace_with_id": { "type": "number" },
+          "source": { "type": "string" },
+          "limit": { "type": "number" },
+          "confirmed": { "type": "boolean" }
+        },
+        "required": ["action"]
+      },
+      "annotations": { "title": "Manage Media", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "site_health",
+      "description": "Scan media library for issues: broken images, missing alt text, unoptimized files, orphaned attachments.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "check": { "type": "string", "enum": ["all", "broken", "missing_alt", "unoptimized", "orphaned", "summary"] },
+          "limit": { "type": "number" }
+        }
+      },
+      "annotations": { "title": "Site Health", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "asset_map",
+      "description": "View asset mapping table showing which source assets have been synced to which destinations.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "destination": { "type": "string", "enum": ["wp", "shopify"] },
+          "source_id": { "type": "string" }
+        }
+      },
+      "annotations": { "title": "Asset Map", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "ai_generate_image",
+      "description": "Generate an AI image using OpenRouter. Returns the image inline.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": { "type": "string" },
+          "model": { "type": "string" },
+          "aspect_ratio": { "type": "string", "enum": ["1:1", "16:9", "9:16", "4:3", "3:4"] },
+          "quality": { "type": "string", "enum": ["standard", "preview"] },
+          "auto_import": { "type": "boolean" },
+          "destination": { "type": "string", "enum": ["wp", "shopify", "both", "hub"] }
+        },
+        "required": ["prompt"]
+      },
+      "annotations": { "title": "Generate AI Image", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "ai_generate_text",
+      "description": "Generate text content using AI. Good for alt text, captions, SEO descriptions.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "prompt": { "type": "string" },
+          "model": { "type": "string" }
+        },
+        "required": ["prompt"]
+      },
+      "annotations": { "title": "Generate AI Text", "readOnlyHint": false, "destructiveHint": false }
+    },
+    {
+      "name": "ai_insights",
+      "description": "AI-powered insights: top quality scores, hero picks, images needing alt text, A/B test results, summary.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "insight_type": { "type": "string", "enum": ["top_quality", "top_performers", "hero_picks", "needs_alt", "ab_tests", "summary"] },
+          "source": { "type": "string" }
+        }
+      },
+      "annotations": { "title": "AI Insights", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "version_test",
+      "description": "Image version history and A/B tests.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["history", "rollback", "ab_create", "ab_delete"] },
+          "attachment_id": { "type": "number" },
+          "target_version": { "type": "number" },
+          "image_a": { "type": "number" },
+          "image_b": { "type": "number" },
+          "name": { "type": "string" },
+          "position": { "type": "string", "enum": ["hero", "thumbnail", "gallery", "any"] },
+          "test_id": { "type": "string" },
+          "confirmed": { "type": "boolean" }
+        },
+        "required": ["action"]
+      },
+      "annotations": { "title": "Version & A/B Test", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "hub",
+      "description": "Manage Syncific Hub multi-site image distribution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["list_sites", "list_groups", "distribute", "sync_image", "resync_all", "job_status"] },
+          "attachment_id": { "type": "number" },
+          "target_sites": { "type": "array", "items": { "type": "string" } },
+          "group_id": { "type": "string" },
+          "job_id": { "type": "string" },
+          "site_url": { "type": "string" },
+          "confirmed": { "type": "boolean" }
+        },
+        "required": ["action"]
+      },
+      "annotations": { "title": "Hub", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "shopify_upload_file",
+      "description": "Upload an image to Shopify Files library with AVIF/WebP optimization.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "filename": { "type": "string" },
+          "image_base64": { "type": "string" },
+          "alt_text": { "type": "string" },
+          "source_id": { "type": "string" },
+          "confirmed": { "type": "boolean" }
+        },
+        "required": ["filename", "image_base64"]
+      },
+      "annotations": { "title": "Upload to Shopify", "readOnlyHint": false, "destructiveHint": true }
+    },
+    {
+      "name": "site_config",
+      "description": "View or update LightSync Pro config and queue.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["view", "update", "queue_status", "queue_list", "cache_clear"] },
+          "avif_enable": { "type": "boolean" },
+          "avif_quality": { "type": "number" },
+          "webp_quality": { "type": "number" },
+          "max_width": { "type": "number" },
+          "max_height": { "type": "number" },
+          "auto_sync": { "type": "boolean" },
+          "sync_target": { "type": "string" },
+          "confirmed": { "type": "boolean" }
+        },
+        "required": ["action"]
+      },
+      "annotations": { "title": "Site Config", "readOnlyHint": false, "destructiveHint": false }
+    },
+    {
+      "name": "reports",
+      "description": "Optimization and inventory reports.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action": { "type": "string", "enum": ["optimization", "csv"] },
+          "source": { "type": "string" },
+          "limit": { "type": "number" },
+          "include_performance": { "type": "boolean" }
+        },
+        "required": ["action"]
+      },
+      "annotations": { "title": "Reports", "readOnlyHint": true, "destructiveHint": false }
+    },
+    {
+      "name": "propose_action",
+      "description": "Queue an action for human approval in the WordPress dashboard.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "action_type": { "type": "string", "enum": ["bulk_import", "re_optimize", "bulk_ai_alt", "sync_source", "health_fix", "custom"] },
+          "label": { "type": "string" },
+          "reason": { "type": "string" },
+          "priority": { "type": "string", "enum": ["high", "medium", "low"] },
+          "payload": { "type": "object" },
+          "source": { "type": "string" }
+        },
+        "required": ["action_type", "label"]
+      },
+      "annotations": { "title": "Propose Action", "readOnlyHint": false, "destructiveHint": false }
+    }
+  ]
+}
