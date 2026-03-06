@@ -54,7 +54,7 @@ Thanks for your interest in contributing. LightSync Pro MCP is the AI interface 
 
 ## Reporting Security Issues
 
-Please do **not** open public issues for security vulnerabilities. Email security@lightsyncpro.com directly. Include steps to reproduce and any relevant context.
+Please do **not** open public issues for security vulnerabilities. Email support@lightsyncpro.com directly. Include steps to reproduce and any relevant context.
 
 ---
 
